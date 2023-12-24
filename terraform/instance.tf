@@ -8,6 +8,7 @@ resource "scaleway_instance_ip" "public_ip" {
 resource "scaleway_instance_server" "ts3-server" {
   project_id = local.project_id
 
+  name    = "ts3-server"
   type              = var.instance_type
   image             = "4aaeb1d4-2cc9-4973-8c79-5c1abc7a7e06"
   routed_ip_enabled = false
@@ -21,7 +22,6 @@ resource "scaleway_instance_server" "ts3-server" {
 }
 
 output "instance_ip" {
-  name    = "ts3-server"
   value       = scaleway_instance_server.ts3-server.public_ip
   sensitive   = false
   description = "instance_ip"
