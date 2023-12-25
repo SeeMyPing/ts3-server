@@ -1,0 +1,4 @@
+---
+dependancies:
+  - bzip2
+  - wget

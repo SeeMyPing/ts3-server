@@ -1,0 +1,44 @@
+---
+- name: Download TS3 server package with check (sha256)
+  ansible.builtin.get_url:
+    url: "{{base_url}}/{{version_major}}.{{version_minor}}/teamspeak3-server_linux_amd64-{{version_major}}.{{version_minor}}.tar.bz2"
+    dest: /tmp/ts3-{{version_major}}.{{version_minor}}.tar.bz2
+    mode: '0440'
+    checksum: sha256:{{ checksum }}
+
+- name: Add user ts3-server
+  ansible.builtin.user:
+    name: ts3-server
+    comment: TS3 Server user
+    home: /opt/ts3-server
+
+- name: Extract TS3 server package
+  ansible.builtin.unarchive:
+    src: /tmp/ts3-{{version_major}}.{{version_minor}}.tar.bz2
+    dest: /opt/ts3-server
+    remote_src: true
+    owner: ts3-server
+    group: ts3-server
+
+- name: Create acceptance file for TS3 server licence
+  ansible.builtin.file:
+    path: /opt/ts3-server/teamspeak3-server_linux_amd64/.ts3server_license_accepted
+    owner: ts3-server
+    group: ts3-server
+    mode: '0644'
+    state: "touch"
+
+- name: Copy service file
+  ansible.builtin.copy:
+    src: lib/systemd/system/ts3-server.service
+    dest: /lib/systemd/system/ts3-server.service
+    owner: root
+    group: root
+    mode: '0644'
+
+- name: Enable & start ts3-server service
+  ansible.builtin.systemd_service:
+    name: ts3-server
+    enabled: true
+    state: started
+    daemon_reload: true

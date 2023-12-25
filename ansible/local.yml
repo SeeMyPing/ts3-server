@@ -1,0 +1,10 @@
+---
+- hosts: ts3-server
+  roles:
+    - role: update
+      tags: update
+    - role: dependancies
+      tags: dependancies
+    - role: ts3-server
+      tags: ts3-server
+    

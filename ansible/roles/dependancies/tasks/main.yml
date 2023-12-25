@@ -1,0 +1,6 @@
+---
+- name: Dependancies installation
+  ansible.builtin.apt:
+    name: "{{ item }}"
+    state: present
+  loop: "{{ dependancies }}"
